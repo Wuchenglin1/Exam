@@ -56,8 +56,15 @@ func Login(c *gin.Context) {
 		return
 	}
 	fmt.Println(user)
-	c.SetCookie("username", user.Username, 3600, "/", "", false, true)
+	j, err1 := tool.SetJWT(c, user.Username)
+	if err1 != nil {
+		tool.RespErrorWithDate(c, err1)
+		return
+	}
+	c.SetCookie("userName", user.Username, 3600, "/", "", false, true)
 	c.SetCookie("id", user.Id, 3600, "/", "", false, true)
+	c.SetCookie("jwt", j, 3600, "/", "", false, true)
+
 	tool.RespSuccessfullWithDate(c, "登录成功！")
 
 }
