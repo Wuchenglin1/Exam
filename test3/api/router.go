@@ -13,6 +13,8 @@ func InitEngine() {
 	account := engine.Group("/account", Auth)
 	{
 		account.GET("", Account)
+		account.POST("/transfer", Transfer)
+		account.POST("/transferSelect", TransferSelect)
 	}
 
 	_ = engine.Run()

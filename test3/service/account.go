@@ -10,7 +10,23 @@ func Account(userName string) model.User {
 	return iUser
 }
 
-func Transfer(t model.Transfer) error {
-	err := dao.Transfer(t)
+func Transfer(t model.Transfer) (error, bool) {
+	err, is := dao.Transfer(t)
+
+	return err, is
+}
+
+func Commit() error {
+	err := dao.Commit()
 	return err
+}
+
+func RollBack() error {
+	err := dao.RollBack()
+	return err
+}
+
+func TransferSelect(k string) (map[int]model.Transfer, error) {
+	m, err := dao.TransferSelect(k)
+	return m, err
 }
