@@ -10,5 +10,10 @@ func InitEngine() {
 		user.POST("/login", Login)
 	}
 
+	account := engine.Group("/account", Auth)
+	{
+		account.GET("", Account)
+	}
+
 	_ = engine.Run()
 }

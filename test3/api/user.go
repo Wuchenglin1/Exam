@@ -18,7 +18,7 @@ func register(c *gin.Context) {
 		return
 	}
 	user := model.User{
-		Username:     username,
+		UserName:     username,
 		UserPassword: password,
 	}
 
@@ -34,10 +34,10 @@ func register(c *gin.Context) {
 // Login 需要传入两个key:username和password
 func Login(c *gin.Context) {
 	user := model.User{
-		Username:     c.PostForm("username"),
+		UserName:     c.PostForm("username"),
 		UserPassword: c.PostForm("password"),
 	}
-	_, err := service.IsRepeatUsername(user.Username)
+	_, err := service.IsRepeatUsername(user.UserName)
 	if err != nil {
 		if err != sql.ErrNoRows {
 			fmt.Println("ERROR:", err)
@@ -56,12 +56,12 @@ func Login(c *gin.Context) {
 		return
 	}
 	fmt.Println(user)
-	j, err1 := tool.SetJWT(c, user.Username)
+	j, err1 := tool.SetJWT(c, user.UserName)
 	if err1 != nil {
 		tool.RespErrorWithDate(c, err1)
 		return
 	}
-	c.SetCookie("userName", user.Username, 3600, "/", "", false, true)
+	c.SetCookie("userName", user.UserName, 3600, "/", "", false, true)
 	c.SetCookie("id", user.Id, 3600, "/", "", false, true)
 	c.SetCookie("jwt", j, 3600, "/", "", false, true)
 

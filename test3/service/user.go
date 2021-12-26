@@ -25,7 +25,7 @@ func Register(user model.User) error {
 
 // IsUserCorrect 检查账号密码是否正确，如果正确返回一个true，若错误则返回一个false
 func IsUserCorrect(user *model.User) bool {
-	iUser, _ := dao.SelectUsername(user.Username)
+	iUser, _ := dao.SelectUsername(user.UserName)
 	err := bcrypt.CompareHashAndPassword([]byte(iUser.UserPassword), []byte(user.UserPassword))
 	if err == nil {
 		user.Id = iUser.Id

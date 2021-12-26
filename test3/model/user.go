@@ -2,6 +2,7 @@ package model
 
 type User struct {
 	Id           string
-	Username     string
+	UserName     string
 	UserPassword string
+	Money        int
 }
