@@ -89,11 +89,20 @@ func TransferSelect(k string) (map[int]model.Transfer, error) {
 	defer row.Close()
 	for row.Next() {
 		i++
-		err = row.Scan(&d.UserName, &d.ToWhom, &d.Money, &d.Detail)
+		err = row.Scan(&d.Id, &d.UserName, &d.ToWhom, &d.Money, &d.Detail)
 		m[i] = d
 		if err != nil {
 			fmt.Println("err2:", err)
 		}
 	}
 	return m, nil
+}
+
+func TransferAddInfo(t model.Transfer) error {
+	_, err := dB.Exec("update transfer set details=? where id = ? and whom = ? ", t.Detail, t.Id, t.UserName)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	return nil
 }

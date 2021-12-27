@@ -30,3 +30,8 @@ func TransferSelect(k string) (map[int]model.Transfer, error) {
 	m, err := dao.TransferSelect(k)
 	return m, err
 }
+
+func TransferAddInfo(t model.Transfer) error {
+	err := dao.TransferAddInfo(t)
+	return err
+}

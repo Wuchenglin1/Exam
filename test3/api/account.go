@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"strconv"
+	"unicode"
 )
 
 //Account 查看自己账户有多少钱(若第一次使用则自动开户)
@@ -30,7 +31,7 @@ func Transfer(c *gin.Context) {
 	mUser.UserName, _ = c.Cookie("userName")
 	//查询登录用户拥有多少钱
 	mUser = service.Account(mUser.UserName)
-	fmt.Println(mUser.Money)
+	fmt.Println(mUser)
 	user := model.User{}
 	//因为用户已经登录，这里就不处理error了
 	user.UserName, _ = c.Cookie("userName")
@@ -49,7 +50,7 @@ func Transfer(c *gin.Context) {
 		return
 	}
 	m, err := strconv.Atoi(c.PostForm("money"))
-	if err != nil {
+	if err != nil || c.PostForm("money") == "" {
 		tool.RespErrorWithDate(c, "请正确输入转账的数字")
 		return
 	}
@@ -103,4 +104,40 @@ func TransferSelect(c *gin.Context) {
 	for _, v := range m {
 		tool.RespSuccessfullWithDate(c, v)
 	}
+}
+
+func TransferAddInfo(c *gin.Context) {
+	id, err := strconv.Atoi(c.PostForm("id"))
+	if err != nil {
+		fmt.Println(err)
+		tool.RespErrorWithDate(c, "输入出错！")
+		return
+	}
+	name, err2 := c.Cookie("userName")
+	if err2 != nil {
+		tool.RespErrorWithDate(c, "没有cookie！")
+		return
+	}
+	t := model.Transfer{
+		Id:       id,
+		UserName: name,
+		Detail:   c.PostForm("key"),
+	}
+	n := func(str string) (count int) {
+		for _, char := range str {
+			if unicode.Is(unicode.Han, char) {
+				count++
+			}
+		}
+		return
+	}(t.Detail)
+	if n >= 20 {
+		tool.RespErrorWithDate(c, "您输入的描述太长啦！请重新输入的啦~")
+		return
+	}
+	err = service.TransferAddInfo(t)
+	if err != nil {
+		tool.RespErrorWithDate(c, "添加失败！")
+	}
+	tool.RespSuccessfullWithDate(c, "修改成功！")
 }

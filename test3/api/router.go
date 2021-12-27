@@ -15,6 +15,7 @@ func InitEngine() {
 		account.GET("", Account)
 		account.POST("/transfer", Transfer)
 		account.POST("/transferSelect", TransferSelect)
+		account.PUT("/transferAddInfo", TransferAddInfo)
 	}
 
 	_ = engine.Run()
