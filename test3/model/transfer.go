@@ -7,3 +7,8 @@ type Transfer struct {
 	Money    int
 	Detail   string
 }
+
+type CZ struct {
+	UserName string
+	Money    int
+}

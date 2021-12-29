@@ -35,3 +35,8 @@ func TransferAddInfo(t model.Transfer) error {
 	err := dao.TransferAddInfo(t)
 	return err
 }
+
+func CZ(cz model.CZ) error {
+	err := dao.CZ(cz)
+	return err
+}
