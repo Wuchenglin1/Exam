@@ -143,3 +143,29 @@ func TransferAddInfo(c *gin.Context) {
 	}
 	tool.RespSuccessfullWithDate(c, "修改成功！")
 }
+
+func CZ(c *gin.Context) {
+	userName, err := c.Cookie("userName")
+	if err != nil {
+		tool.RespErrorWithDate(c, "没有cookie!")
+		c.Abort()
+		return
+	}
+	m, err1 := strconv.Atoi(c.PostForm("money"))
+	if err1 != nil {
+		fmt.Println(err1)
+		return
+	}
+	cz := model.CZ{
+		UserName: userName,
+		Money:    m,
+	}
+
+	err = service.CZ(cz)
+	if err != nil {
+		fmt.Println(err)
+		tool.RespErrorWithDate(c, "充值失败！")
+		return
+	}
+	tool.RespSuccessfullWithDate(c, cz.UserName+"充值"+strconv.Itoa(cz.Money)+"成功！")
+}
