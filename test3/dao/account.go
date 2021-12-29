@@ -80,6 +80,16 @@ func TransferSelect(k string) (map[int]model.Transfer, error) {
 	m := make(map[int]model.Transfer)
 	d := model.Transfer{}
 	row, err := dB.Query("select * from transfer where details like ?", "%"+k+"%")
+
+	//以下为预处理的查询方法
+	//stmt, err := dB.Prepare("select * from transfer where details like ?")
+	//if err != nil {
+	//	fmt.Println(err)
+	//	return m, err
+	//}
+	//defer stmt.Close()
+	//row, err := stmt.Query("%" + k + "%")
+
 	//dB.QueryRow("select * from transfer where details like %?%",k)是错误的写法
 	//大致意思是：
 	//通配符％，应该是参数字符串的一部分，也就是说%必须作为字符串写到参数里面去，而不能在sql语句

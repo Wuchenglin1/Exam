@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"strconv"
+	"time"
 	"unicode"
 )
 
@@ -18,6 +19,7 @@ func Account(c *gin.Context) {
 	user.UserName, _ = c.Cookie("userName")
 	iUser := service.Account(user.UserName)
 	tool.RespSuccessfullWithDate(c, gin.H{
+		"time:":                time.Now(),
 		"尊敬的" + iUser.UserName: "您好！",
 		"您的余额为：":               iUser.Money,
 	})

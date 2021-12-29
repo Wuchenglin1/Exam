@@ -56,14 +56,20 @@ func Login(c *gin.Context) {
 		return
 	}
 	fmt.Println(user)
-	j, err1 := tool.SetJWT(c, user.UserName)
+	//设置一个3min的token
+	token, err1 := service.SetJWT(180, user.UserName, "token")
+
 	if err1 != nil {
+		fmt.Println(err1)
 		tool.RespErrorWithDate(c, err1)
 		return
 	}
+
 	c.SetCookie("userName", user.UserName, 3600, "/", "", false, true)
 	c.SetCookie("id", user.Id, 3600, "/", "", false, true)
-	c.SetCookie("jwt", j, 3600, "/", "", false, true)
+
+	//因为莫得前端的支持，只能用cookie模拟header了QAQ,而且用cookie实现refreshToken太麻烦了！！我做不来QAQ
+	c.SetCookie("token", token, 3600, "/", "", false, true)
 
 	tool.RespSuccessfullWithDate(c, "登录成功！")
 
