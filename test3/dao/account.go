@@ -116,3 +116,31 @@ func TransferAddInfo(t model.Transfer) error {
 	}
 	return nil
 }
+
+func CZ(cz model.CZ) error {
+	var m int
+	err1 := dB.QueryRow("select money from account where name = ?", cz.UserName).Scan(&m)
+	if err1 != nil {
+		return err1
+	}
+	m += cz.Money
+	_, err := dB.Exec("update account set money=? where name = ?", m, cz.UserName)
+	return err
+}
+
+// Deduction 账户自动扣费的系统,扣1块钱的服务费
+func Deduction() {
+	iuser := model.User{}
+	row, err := dB.Query("select name,money from account")
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer row.Close()
+	for row.Next() {
+		row.Scan(&iuser.UserName, &iuser.Money)
+		_, err = dB.Exec("update account set money = ? where name = ?", iuser.Money-1, iuser.UserName)
+		if err != nil {
+			fmt.Println(err)
+		}
+	}
+}
